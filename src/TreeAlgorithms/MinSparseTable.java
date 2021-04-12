@@ -68,9 +68,9 @@ public class MinSparseTable {
     }
 
     public static void main(String[] args) {
-        long[] values = {1, 2, 3, 4, 5};
+        long[] values = {1, 2, 3, 4, 9, 10, 19, 20};
         MinSparseTable sparseTable = new MinSparseTable(values);
-        System.out.println(sparseTable.queryMin(0, 4));
-        System.out.println(sparseTable.queryMinIndex(0, 4));
+        System.out.println(sparseTable.queryMin(2, 4));
+//        System.out.println(sparseTable.queryMinIndex(0, 4));
     }
 }

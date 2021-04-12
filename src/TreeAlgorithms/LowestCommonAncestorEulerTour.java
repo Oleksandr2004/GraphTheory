@@ -8,7 +8,7 @@ public class LowestCommonAncestorEulerTour {
 
     private final int n;
 
-    private int tourIndex;
+    private int tourIndex = 0;
 
     private long[] nodeDepth;
 
@@ -102,6 +102,30 @@ public class LowestCommonAncestorEulerTour {
         public String toString() {
             return String.valueOf(id);
         }
+
+        private static TreeNode rootTree(List<List<Integer>> graph, Integer rootId) {
+            TreeNode root = new TreeNode(rootId);
+            return buildTree(graph, root);
+        }
+
+        private static TreeNode buildTree(List<List<Integer>> graph, TreeNode node) {
+
+            int subtreeNodeCount = 1;
+
+            for (int neighbor : graph.get(node.getId())) {
+                if (node.getParent() != null && neighbor == node.getParent().getId()) {
+                    continue;
+                }
+                TreeNode child = new TreeNode(neighbor, node);
+                node.addChildren(child);
+                buildTree(graph, child);
+                subtreeNodeCount += child.getSize();
+            }
+
+            node.setSize(subtreeNodeCount);
+            return node;
+        }
+
     }
 
     public static void main(String[] args) {
@@ -109,41 +133,20 @@ public class LowestCommonAncestorEulerTour {
         List<List<Integer>> graph = createEmptyGraph(5);
         addUndirectedEdge(graph, 0, 1);
         addUndirectedEdge(graph, 0, 2);
+        addUndirectedEdge(graph, 2, 3);
+        addUndirectedEdge(graph, 2, 4);
 
-        TreeNode root = rootTree(graph, 0);
+        TreeNode root = TreeNode.rootTree(graph, 0);
 
         LowestCommonAncestorEulerTour solver = new LowestCommonAncestorEulerTour(root);
-        System.out.println(solver.lca(1, 2));
+        System.out.println(solver.lca(3, 4));
     }
 
     private TreeNode lca(int index1, int index2) {
-        int l = Math.min(index1, index2);
-        int r = Math.max(index1, index2);
+        int l = Math.min(last[index1], last[index2]);
+        int r = Math.max(last[index1], last[index2]);
         int i = (int) sparseTable.queryMin(l, r);
         return nodeOrder[i];
-    }
-
-    private static TreeNode rootTree(List<List<Integer>> graph, Integer rootId) {
-        TreeNode root = new TreeNode(rootId);
-        return buildTree(graph, root);
-    }
-
-    private static TreeNode buildTree(List<List<Integer>> graph, TreeNode node) {
-
-        int subtreeNodeCount = 1;
-
-        for (int neighbor : graph.get(node.getId())) {
-            if (node.getParent() != null && neighbor == node.getParent().getId()) {
-                continue;
-            }
-            TreeNode child = new TreeNode(neighbor, node);
-            node.addChildren(child);
-            buildTree(graph, child);
-            subtreeNodeCount += child.getSize();
-        }
-
-        node.setSize(subtreeNodeCount);
-        return node;
     }
 
     private static List<List<Integer>> createEmptyGraph(int n) {
