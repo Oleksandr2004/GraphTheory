@@ -54,7 +54,7 @@ public class LowestCommonAncestorEulerTour {
         tourIndex++;
     }
 
-    private static class TreeNode {
+    public static class TreeNode {
 
         private int n;
 
@@ -62,17 +62,17 @@ public class LowestCommonAncestorEulerTour {
         private TreeNode parent;
         private List<TreeNode> children;
 
-        private TreeNode(int id) {
+        public TreeNode(int id) {
             this(id, null);
         }
 
-        private TreeNode(int id, TreeNode parent) {
+        public TreeNode(int id, TreeNode parent) {
             this.id = id;
             this.parent = parent;
             this.children = new LinkedList<>();
         }
 
-        private void addChildren(TreeNode... nodes) {
+        public void addChildren(TreeNode... nodes) {
             for (TreeNode node : nodes) {
                 children.add(node);
             }
@@ -118,6 +118,7 @@ public class LowestCommonAncestorEulerTour {
                 }
                 TreeNode child = new TreeNode(neighbor, node);
                 node.addChildren(child);
+
                 buildTree(graph, child);
                 subtreeNodeCount += child.getSize();
             }
@@ -145,7 +146,7 @@ public class LowestCommonAncestorEulerTour {
     private TreeNode lca(int index1, int index2) {
         int l = Math.min(last[index1], last[index2]);
         int r = Math.max(last[index1], last[index2]);
-        int i = (int) sparseTable.queryMin(l, r);
+        int i = (int) sparseTable.queryMinIndex(l, r);
         return nodeOrder[i];
     }
 
